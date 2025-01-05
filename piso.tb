@@ -1,0 +1,40 @@
+module piso_tb;
+    reg clk;             
+    reg rst;             
+    reg load;            
+    reg [7:0] pdata;   
+    wire sdata;         
+    
+    piso uut (
+        .clk(clk),
+        .rst(rst),
+        .load(load),
+        .pdata(pdata),
+        .sdata(sdata)
+    );
+
+    initial clk = 0;
+    always #10 clk = ~clk;
+
+    initial begin
+        rst = 1; load = 0; pdata = 8'b0;
+
+        #20 rst = 0;
+
+        pdata = 8'b10101010; load = 1;
+        #20 load = 0;
+
+        #160;
+        pdata = 8'b11001100; load = 1;
+        #20 load = 0;
+
+        #160;
+
+        $stop;
+    end
+
+    initial begin
+        $monitor("Time=%0d, clk=%b, rst=%b, load=%b, pdata=%b, sdata=%b",
+                 $time, clk, rst, load, pdata, sdata);
+    end
+endmodule
